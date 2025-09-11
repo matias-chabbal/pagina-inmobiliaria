@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Sobre Nosotros | Pesasi-Migliori</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@8/swiper-bundle.min.css">
+    <link rel="stylesheet" href="/static/css/common.css">
+
+</head>
+<body>
+    <header class="header">
+        <h1 class="brand-title">Pesasi-Migliori</h1>
+    </header>
+    <nav class="nav-container">
+        <div class="nav-content">
+            <button class="menu-button" onclick="toggleMenu()">☰</button>
+            <div class="nav-links" id="navLinks">
+                <a href="/" class="nav-link">Propiedades</a>
+                <a href="/sobre-nosotros" class="nav-link active">Sobre Nosotros</a>
+            </div>
+        </div>
+    </nav>
+    <div class="page-overlay">
+            <div class="page-container">
+    <h2 class="section-title">Sobre Nosotros</h2>
+    <div class="about-container fondo-transparente">
+        <!-- Carousel y contenido aquí -->
+    </div>
+    </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/swiper@8/swiper-bundle.min.js"></script>
+    <script>
+        function toggleMenu() {
+            const navLinks = document.getElementById('navLinks');
+            navLinks.classList.toggle('show');
+        }
+        const swiper = new Swiper('.swiper', {
+            loop: true,
+            autoplay: {
+                delay: 3000,
+                disableOnInteraction: false,
+            },
+            pagination: {
+                el: '.swiper-pagination',
+                clickable: true,
+            },
+            navigation: {
+                nextEl: '.swiper-button-next',
+                prevEl: '.swiper-button-prev',
+            },
+        });
+    </script>
+</body>
+</html>

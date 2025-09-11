@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Panel de Administración | Pesasi-Migliori</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/common.css">
+
+    
+</head>
+<body>
+    <header class="header">
+        <h1 class="brand-title">Pesasi-Migliori</h1>
+    </header>
+    <div class="admin-content">
+        <div class="header">
+            Panel de Administración
+            <a href="/logout" class="logout-btn">Cerrar sesión</a>
+        </div>
+        <div class="page-overlay">
+            <div class="page-container">
+        <div class="container">
+            <form method="post" action="/admin/agregar" enctype="multipart/form-data" class="form-wrapper">
+                <h2 class="form-title">Agregar Propiedad</h2>
+                <div class="form-group">
+                    <input class="form-input" type="text" name="titulo" id="titulo" required placeholder=" " />
+                    <label class="form-label" for="titulo">Título</label>
+                </div>
+                <div class="form-group">
+                    <textarea class="form-input" name="descripcion" id="descripcion" required placeholder=" "></textarea>
+                    <label class="form-label" for="descripcion">Descripción</label>
+                </div>
+                <div class="form-group">
+                    <input class="form-input" type="number" name="precio" id="precio" required step="0.01" min="0" placeholder=" " />
+                    <label class="form-label" for="precio">Precio</label>
+                </div>
+                <div class="form-group">
+                    <select class="form-input" name="tipo" id="tipo" required>
+                        <option value="" disabled selected>Seleccione un tipo</option>
+                        <option value="Casa">Casa</option>
+                        <option value="Departamento">Departamento</option>
+                        <option value="Terreno">Terreno</option>
+                    </select>
+                    <label class="form-label" for="tipo">Tipo de Propiedad</label>
+                </div>
+                <div class="form-group">
+                    <input class="form-input" type="file" name="imagenes" id="imagenes" multiple accept="image/*" required>
+                    <label class="form-label" for="imagenes">Imágenes</label>
+                    <small>Puede seleccionar múltiples imágenes</small>
+                </div>
+                <div class="form-group">
+                    <input class="form-input" type="text" name="ubicacion" id="ubicacion" required placeholder=" " />
+                    <label class="form-label" for="ubicacion">Ubicación (nombre)</label>
+                </div>
+                <div class="form-group">
+                    <input class="form-input" type="text" name="ubicacion_maps" id="ubicacion_maps" required placeholder=" " />
+                    <label class="form-label" for="ubicacion_maps">Link de Google Maps</label>
+                </div>
+                <button class="form-btn" type="submit">Agregar Propiedad</button>
+            </form>
+
+            <!-- Add this new section for listing properties -->
+            <div class="property-list">
+                <h2>Propiedades Publicadas</h2>
+                {% for p in propiedades %}
+                <div class="property-item">
+                    <div>
+                        <strong>{{ p.titulo }}</strong>
+                        <span>${{ '{:,.0f}'.format(p.precio) }}</span>
+                        <span>({{ p.tipo }})</span>
+                    </div>
+                    <div>
+                        <a href="/admin/edit/{{ p.id }}" class="edit-publicacion-btn">Editar</a>
+                        <form method="post" action="/admin/delete/{{ p.id }}" style="display:inline;">
+                            <button type="submit" class="delete-publicacion-btn"
+                                    onclick="return confirm('¿Estás seguro de que quieres eliminar esta propiedad?')">
+                                Eliminar
+                            </button>
+                        </form>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    </div>
+    </div>
+    {% if request.query_params.get('msg') == 'edicion_exitosa' %}
+    <div class="form-success">¡Edición exitosa!</div>
+    {% endif %}
+</body>
+</html>

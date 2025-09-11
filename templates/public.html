@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Pesasi-Migliori Propiedades</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/common.css">
+
+    
+</head>
+<body>
+    <header class="header">
+        <h1 class="brand-title">Pesasi-Migliori</h1>
+    </header>
+    
+    <nav class="nav-container">
+        <div class="nav-content">
+            <button class="menu-button" onclick="toggleMenu()">☰</button>
+            <div class="nav-links" id="navLinks">
+                <a href="/" class="nav-link active">Propiedades</a>
+                <a href="/sobre-nosotros" class="nav-link">Sobre Nosotros</a>
+            </div>
+        </div>
+    </nav>
+   
+            <!-- acá va el contenido específico de cada página -->
+
+         <div class="page-overlay">
+            <div class="page-container">
+            <h2 class="section-title">Propiedades Disponibles</h2>
+            <div class="container">
+        <div class="propiedades-grid">
+            {% for p in propiedades %}
+                <div class="propiedad-card">
+                    <div class="imagen-container">
+                        {% if p.imagenes %}
+                            <img class="propiedad-imagen" src="{{ p.imagenes[0].url }}" alt="{{ p.titulo }}">
+                        {% else %}
+                            <img class="propiedad-imagen" src="/static/images/default-property.jpg" alt="Sin imagen">
+                        {% endif %}
+                    </div>
+                    <div class="propiedad-info">
+                        <h3 class="propiedad-titulo">{{ p.titulo }}</h3>
+                        <div class="propiedad-tipo">{{ p.tipo }}</div>
+                        <p class="propiedad-descripcion">{{ p.descripcion }}</p>
+                        <div class="botones-container">
+                            <a href="/propiedad/{{ p.id }}" class="btn btn-detalles">Ver Detalles</a>
+                            <a href="https://wa.me/3543642386?text=Hola, me interesa la propiedad: {{ p.titulo|urlencode }} ({{ request.base_url }}propiedad/{{ p.id }})" 
+                               target="_blank" 
+                               class="btn btn-whatsapp">
+                                Consultar
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+        </div>
+</div>
+    <a href="https://wa.me/3543642386?text=Hola, me gustaría recibir información sobre las propiedades disponibles" 
+       target="_blank" 
+       class="floating-whatsapp" 
+       title="Consultar por WhatsApp">
+        <svg viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.77-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793s.448-1.273.607-1.446c.159-.173.346-.217.462-.217l.332.006c.106.005.249-.04.39.298.144.347.491 1.2.534 1.287.043.087.072.188.014.304-.058.116-.087.188-.173.289l-.26.304c-.087.086-.177.18-.076.354.101.174.449.741.964 1.201.662.591 1.221.774 1.394.86s.274.072.376-.043c.101-.116.433-.506.549-.68.116-.173.231-.145.39-.087s1.011.477 1.184.564.289.13.332.202c.045.072.045.419-.1.824z"/>
+        </svg>
+    </a>
+    
+    <script>
+        function toggleMenu() {
+            const navLinks = document.getElementById('navLinks');
+            navLinks.classList.toggle('show');
+        }
+    </script>
+</body>
+</html>

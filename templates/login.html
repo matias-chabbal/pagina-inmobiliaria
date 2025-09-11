@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Login | Pesasi-Migliori</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/common.css">
+
+    
+</head>
+<body>
+    <header class="header">
+        <h1 class="brand-title">Pesasi-Migliori</h1>
+    </header>
+    <div class="page-overlay">
+            <div class="page-container">
+    <div class="login-container">
+        <h2>Admin Login</h2>
+        {% if error %}
+            <div class="error">{{ error }}</div>
+        {% endif %}
+        <form method="post">
+            <input type="text" name="username" placeholder="Usuario" required>
+            <input type="password" name="password" placeholder="Contraseña" required>
+            <button type="submit" class="login-btn">Ingresar</button>
+        </form>
+    </div>
+    </div>
+    </div>
+</body>
+</html>

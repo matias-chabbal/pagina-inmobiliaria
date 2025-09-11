@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Editar Propiedad | Pesasi-Migliori</title>
+    <link rel="stylesheet" href="/static/css/common.css">
+</head>
+<body>
+    <div class="form-wrapper">
+        <h2 class="form-title">Editar Propiedad</h2>
+        <form method="post" action="/admin/edit/{{ propiedad.id }}" enctype="multipart/form-data">
+            <div class="form-group">
+                <input class="form-input" type="text" name="titulo" value="{{ propiedad.titulo }}" required placeholder=" " />
+                <label class="form-label" for="titulo">Título</label>
+            </div>
+            <div class="form-group">
+                <textarea class="form-input" name="descripcion" required placeholder=" ">{{ propiedad.descripcion }}</textarea>
+                <label class="form-label" for="descripcion">Descripción</label>
+            </div>
+            <div class="form-group">
+                <input class="form-input" type="number" name="precio" value="{{ propiedad.precio }}" required step="0.01" min="0" placeholder=" " />
+                <label class="form-label" for="precio">Precio</label>
+            </div>
+            <div class="form-group">
+                <select class="form-input" name="tipo" required>
+                    <option value="Casa" {% if propiedad.tipo == "Casa" %}selected{% endif %}>Casa</option>
+                    <option value="Departamento" {% if propiedad.tipo == "Departamento" %}selected{% endif %}>Departamento</option>
+                    <option value="Terreno" {% if propiedad.tipo == "Terreno" %}selected{% endif %}>Terreno</option>
+                </select>
+                <label class="form-label" for="tipo">Tipo de Propiedad</label>
+            </div>
+            <div class="form-group">
+                <input class="form-input" type="file" name="imagenes" multiple accept="image/*">
+                <label class="form-label" for="imagenes">Agregar nuevas imágenes</label>
+            </div>
+            <div class="form-group">
+                <input class="form-input" type="text" name="ubicacion" value="{{ propiedad.ubicacion }}" required placeholder=" " />
+                <label class="form-label" for="ubicacion">Ubicación (nombre)</label>
+            </div>
+            <div class="form-group">
+                <input class="form-input" type="text" name="ubicacion_maps" value="{{ propiedad.ubicacion_maps }}" required placeholder=" " />
+                <label class="form-label" for="ubicacion_maps">Link de Google Maps</label>
+            </div>
+            <button class="form-btn" type="submit">Guardar Cambios</button>
+        </form>
+        <div class="image-list">
+            {% for img in propiedad.imagenes %}
+                <div class="image-thumb">
+                    <img src="{{ img.url }}" alt="Imagen propiedad">
+                    <form method="post" action="/admin/delete-image/{{ img.id }}" style="position:absolute;top:6px;right:6px;">
+                        <button type="submit" class="delete-btn" title="Eliminar imagen">&#10006;</button>
+                    </form>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</body>
+</html>

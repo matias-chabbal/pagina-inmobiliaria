@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ propiedad.titulo }} | Pesasi-Migliori</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@8/swiper-bundle.min.css">
+    <link rel="stylesheet" href="/static/css/common.css">
+
+    <style>
+        
+
+        .container {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        .propiedad-header {
+            background: #fff;
+            padding: 32px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(44,62,80,0.08);
+            margin-bottom: 24px;
+        }
+
+        .titulo {
+            color: #333;
+            font-size: 2em;
+            margin: 0 0 16px 0;
+        }
+
+        .precio {
+            color: var(--primary-yellow);
+            font-size: 1.5em;
+            font-weight: bold;
+        }
+
+        .tipo {
+            color: #6c757d;
+            margin-left: 12px;
+        }
+
+        .swiper {
+            width: 100%;
+            height: 500px;
+            border-radius: 8px;
+            margin-bottom: 24px;
+        }
+
+        .swiper-slide img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .descripcion {
+            background: #fff;
+            padding: 32px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(44,62,80,0.08);
+            margin-bottom: 24px;
+        }
+
+        .mapa {
+            background: #fff;
+            padding: 32px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(44,62,80,0.08);
+        }
+
+        .volver {
+            display: inline-block;
+            padding: 8px 16px;
+            background: var(--primary-yellow);
+            color: var(--text-dark);
+            text-decoration: none;
+            border-radius: 4px;
+            margin-bottom: 24px;
+        }
+
+        .btn-whatsapp {
+            display: inline-block;
+            padding: 12px 24px;
+            background: var(--primary-yellow);
+            color: var(--text-dark);
+            text-decoration: none;
+            border-radius: 4px;
+            margin-top: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            width: fit-content;
+        }
+
+        .btn-whatsapp:hover {
+            background: #FFE5B4;
+        }
+
+        h2 {
+            color: #333;
+            margin-top: 0;
+        }
+
+        #map {
+            height: 400px;
+            width: 100%;
+            border-radius: 4px;
+            margin-top: 16px;
+        }
+
+        .map-container {
+            width: 100%;
+            height: 320px;
+            border-radius: 12px;
+            overflow: hidden;
+            margin-top: 16px;
+        }
+
+        .map-container iframe {
+            width: 100%;
+            height: 100%;
+            border: 0;
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <h1 class="brand-title">Pesasi-Migliori</h1>
+    </header>
+    <div class="page-overlay">
+            <div class="page-container">
+    <div class="container">
+        <a href="/" class="volver">← Volver</a>
+         
+        <div class="propiedad-header">
+            <h1 class="titulo">{{ propiedad.titulo }}</h1>
+            <span class="precio">${{ '{:,.0f}'.format(propiedad.precio) }}</span>
+            <span class="tipo">({{ propiedad.tipo }})</span>
+            <div>
+                <a href="https://wa.me/3543642386?text=Hola, me interesa la propiedad: {{ propiedad.titulo|urlencode }} {{ request.base_url }}propiedad/{{ propiedad.id }}" 
+                   target="_blank" 
+                   class="btn-whatsapp">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.77-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793s.448-1.273.607-1.446c.159-.173.346-.217.462-.217l.332.006c.106.005.249-.04.39.298.144.347.491 1.2.534 1.287.043.087.072.188.014.304-.058.116-.087.188-.173.289l-.26.304c-.087.086-.177.18-.076.354.101.174.449.741.964 1.201.662.591 1.221.774 1.394.86s.274.072.376-.043c.101-.116.433-.506.549-.68.116-.173.231-.145.39-.087s1.011.477 1.184.564.289.13.332.202c.045.072.045.419-.1.824z"/>
+                    </svg>
+                    Consultar por WhatsApp
+                </a>
+            </div>
+        </div>
+
+        <!-- Carousel de imágenes -->
+        <div class="swiper">
+            <div class="swiper-wrapper">
+                {% for imagen in propiedad.imagenes %}
+                <div class="swiper-slide">
+                    <img src="{{ imagen.url }}" alt="{{ propiedad.titulo }}">
+                </div>
+                {% endfor %}
+            </div>
+            <div class="swiper-pagination"></div>
+            <div class="swiper-button-prev"></div>
+            <div class="swiper-button-next"></div>
+        </div>
+
+        <div class="descripcion">
+            <h2>Descripción</h2>
+            <p>{{ propiedad.descripcion }}</p>
+        </div>
+
+        <div class="mapa">
+            <h2>Ubicación en el mapa</h2>
+            {% if propiedad.ubicacion_maps %}
+                <div class="map-container">
+                    <iframe
+                        src="https://www.google.com/maps/embed?pb=!4v1757555151289!6m8!1m7!1sCKLIgLLfU4wKR5hdFS9bhg!2m2!1d-31.33872529301474!2d-64.25718217750276!3f66.650375!4f0!5f0.7820865974627469"
+                        width="100%"
+                        height="350"
+                        style="border:0; border-radius:12px;"
+                        allowfullscreen=""
+                        loading="lazy"
+                        referrerpolicy="no-referrer-when-downgrade">
+                    </iframe>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+    </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/swiper@8/swiper-bundle.min.js"></script>
+    <script>
+        // Inicializar el carousel
+        const swiper = new Swiper('.swiper', {
+            navigation: {
+                nextEl: '.swiper-button-next',
+                prevEl: '.swiper-button-prev',
+            },
+            pagination: {
+                el: '.swiper-pagination',
+                clickable: true
+            },
+        });
+
+        // Función para inicializar el mapa
+        function initMap() {
+            const geocoder = new google.maps.Geocoder();
+            const address = "{{ propiedad.ubicacion }}";
+            
+            geocoder.geocode({ address: address }, function(results, status) {
+                if (status === 'OK') {
+                    const map = new google.maps.Map(document.getElementById('map'), {
+                        zoom: 15,
+                        center: results[0].geometry.location,
+                        mapTypeControl: true,
+                        streetViewControl: true,
+                        fullscreenControl: true
+                    });
+                    
+                    const marker = new google.maps.Marker({
+                        map: map,
+                        position: results[0].geometry.location,
+                        animation: google.maps.Animation.DROP,
+                        title: "{{ propiedad.titulo }}"
+                    });
+
+                    // Info window con detalles
+                    const infowindow = new google.maps.InfoWindow({
+                        content: `
+                            <div style="padding: 8px;">
+                                <strong>{{ propiedad.titulo }}</strong><br>
+                                {{ propiedad.ubicacion }}
+                            </div>
+                        `
+                    });
+
+                    marker.addListener('click', () => {
+                        infowindow.open(map, marker);
+                    });
+                }
+            });
+        }
+    </script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=TU_API_KEY&callback=initMap" async defer></script>
+</body>
+</html>
