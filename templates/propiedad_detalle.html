@@ -122,6 +122,14 @@
             border: 0;
         }
     </style>
+
+    <meta property="og:title" content="{{ propiedad.titulo }} | Pesasi-Migliori">
+<meta property="og:description" content="{{ propiedad.descripcion }}">
+{% if propiedad.imagenes %}
+<meta property="og:image" content="{{ propiedad.imagenes[0].url }}">
+{% endif %}
+<meta property="og:url" content="{{ request.base_url ~ 'propiedad/' ~ propiedad.id }}">
+<meta property="og:type" content="website">
 </head>
 <body>
     <header class="header">
@@ -137,7 +145,11 @@
             <span class="precio">${{ '{:,.0f}'.format(propiedad.precio) }}</span>
             <span class="tipo">({{ propiedad.tipo }})</span>
             <div>
-                <a href="https://wa.me/3543642386?text=Hola, me interesa la propiedad: {{ propiedad.titulo|urlencode }} {{ request.base_url }}propiedad/{{ propiedad.id }}" 
+                <a href="https://wa.me/3543642386?text={{ 
+    '¡Hola! 👋 Me gustaría recibir más información sobre la propiedad "' ~ propiedad.titulo ~ '".%0A' ~
+    '¿Está disponible?%0A' ~
+    'Aquí veo el detalle: ' ~ request.base_url ~ 'propiedad/' ~ propiedad.id 
+}}" 
                    target="_blank" 
                    class="btn-whatsapp">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
@@ -164,7 +176,7 @@
 
         <div class="descripcion">
             <h2>Descripción</h2>
-            <p>{{ propiedad.descripcion }}</p>
+            <p class="propiedad-descripcion">{{ propiedad.descripcion }}</p>
         </div>
 
         <div class="mapa">

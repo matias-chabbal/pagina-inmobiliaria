@@ -230,6 +230,7 @@ body {
     margin-bottom: 10px;
     min-height: 38px;
     line-height: 1.4;
+    white-space: pre-line; /* <-- Esto respeta los saltos de línea */
 }
 
 .botones-container {
