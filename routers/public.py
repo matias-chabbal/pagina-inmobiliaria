@@ -1,10 +1,11 @@
 from fastapi import APIRouter, Request, Depends
+from fastapi.templating import Jinja2Templates
+from fastapi.responses import HTMLResponse, RedirectResponse
 from sqlalchemy.orm import Session
 from database import SessionLocal
 import crud
-from fastapi.templating import Jinja2Templates
-from fastapi.responses import HTMLResponse, RedirectResponse
 from pathlib import Path
+import models
 
 router = APIRouter()
 templates = Jinja2Templates(directory="templates")
@@ -17,13 +18,25 @@ def get_db():
         db.close()
 
 @router.get("/", response_class=HTMLResponse)
-def mostrar_propiedades(request: Request, db: Session = Depends(get_db)):
-    propiedades = crud.listar_propiedades(db)
-    print(f"Número de propiedades encontradas: {len(propiedades)}")  # Debug
-    return templates.TemplateResponse(
-        "public.html", 
-        {"request": request, "propiedades": propiedades}
-    )
+def public_home(request: Request):
+    db: Session = SessionLocal()
+    tipo = request.query_params.get("tipo")
+    precio_min = request.query_params.get("precio_min")
+    precio_max = request.query_params.get("precio_max")
+    ubicacion = request.query_params.get("ubicacion")
+
+    query = db.query(models.Propiedad)
+    if tipo:
+        query = query.filter(models.Propiedad.tipo == tipo)
+    if precio_min:
+        query = query.filter(models.Propiedad.precio >= float(precio_min))
+    if precio_max:
+        query = query.filter(models.Propiedad.precio <= float(precio_max))
+    if ubicacion:
+        query = query.filter(models.Propiedad.ubicacion.ilike(f"%{ubicacion}%"))
+
+    propiedades = query.all()
+    return templates.TemplateResponse("public.html", {"request": request, "propiedades": propiedades})
 
 @router.get("/propiedad/{id}", response_class=HTMLResponse)
 def mostrar_propiedad(request: Request, id: int, db: Session = Depends(get_db)):
