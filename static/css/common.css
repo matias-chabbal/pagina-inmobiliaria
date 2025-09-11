@@ -59,12 +59,55 @@ body {
     box-shadow: 0 2px 6px rgba(0,0,0,0.1);
 }
 
-.brand-title {
-    font-size: 2.5rem; /* Grande */
-    font-weight: 700;
-    color: var(--text-dark);
-    letter-spacing: 2px;
+
+
+
+
+/* Logo Pesasi-Migliori */
+.brand-logo {
+    display: block;
+    max-height: 100px;
+    width: auto;
+    margin: 0 auto 16px auto;
+    border-radius: 18px;
+    box-shadow: 0 6px 32px rgba(44,62,80,0.12), 0 0 0 0 #fff;
+    position: relative;
+    transition: transform 0.3s cubic-bezier(.4,2,.6,1), box-shadow 0.3s;
+    outline: 2px solid #fee14e;
+    outline-offset: 6px;
+    /* Animación de brillo */
+    animation: logo-shine 5s infinite;
+    z-index: 1;
 }
+
+
+
+
+/* Reflejo suave debajo del logo */
+.brand-logo::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    bottom: -22px;
+    transform: translateX(-50%);
+    width: 70%;
+    height: 22px;
+    background: linear-gradient(180deg, rgba(255,255,255,0.18) 0%, rgba(255,255,255,0.01) 100%);
+    border-radius: 50%;
+    filter: blur(2.5px);
+    opacity: 0.6;
+    pointer-events: none;
+    z-index: 0;
+}
+
+/* Efecto al pasar el mouse */
+.brand-logo:hover {
+    transform: scale(1.10) rotate(-0.5deg);
+    box-shadow: 0 12px 48px rgba(44,62,80,0.18), 0 0 32px 8px #fee14e;
+    outline: 3px solid #fffbe6;
+    outline-offset: 10px;
+}
+
 /* NAVBAR */
 .nav-container {
     background: var(--primary-yellow);
@@ -488,7 +531,7 @@ body {
 .image-thumb {
     position: relative;
     width: 110px;
-    height: 80px;
+    height: 110px;
     border-radius: 8px;
     overflow: hidden;
     box-shadow: 0 2px 8px #0001;
@@ -528,33 +571,156 @@ body {
 
 /*end admin edit objects*/
 
-/* Responsive */
-@media (max-width: 768px) {
-    .menu-button {
-        display: block;
-    }
+/* Servicios */
+.services-container {
+    max-width: 900px;
+    margin: 40px auto 0 auto;
+    padding: 32px 24px;
+    background: rgba(255,255,255,0.92);
+    border-radius: 18px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+}
 
-    .nav-links {
-        display: none;
+.service-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 32px;
+    justify-content: space-between;
+}
+
+.service-item {
+    flex: 1 1 260px;
+    min-width: 240px;
+    background: #fffbe6;
+    border-radius: 14px;
+    box-shadow: 0 2px 8px #fee14e44;
+    padding: 24px 18px;
+    margin-bottom: 18px;
+    transition: box-shadow 0.3s, transform 0.3s;
+}
+
+.service-item:hover {
+    box-shadow: 0 6px 24px #fee14e88;
+    transform: translateY(-4px) scale(1.03);
+}
+
+.service-title {
+    font-size: 1.35rem;
+    font-weight: 700;
+    color: #217dbb;
+    margin-bottom: 12px;
+    letter-spacing: 1px;
+}
+
+@media (max-width: 900px) {
+    .service-list {
         flex-direction: column;
-        background: var(--primary-yellow);
-        position: absolute;
-        top: 60px;
-        left: 0;
-        width: 100%;
-        padding: 15px 0;
-        box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+        gap: 18px;
     }
+}
 
-    .nav-links.show {
-        display: flex;
-        animation: slideDown 0.3s ease;
-    }
+/* Estilos para el login */
+.login-container {
+    max-width: 480px;
+    margin: 80px auto;
+    padding: 54px;
+    background: rgba(255,255,255,0.98);
+    border-radius: 24px;
+    box-shadow: 0 12px 48px rgba(44, 62, 80, 0.13), 0 2px 12px #fee14e44;
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+    border: 2px solid #e3eaf1;
+    animation: fadeIn 0.7s;
+    margin: 50px;
+}
 
-    @keyframes slideDown {
-        from { opacity: 0; transform: translateY(-10px); }
-        to { opacity: 1; transform: translateY(0); }
-    }
+.login-container h2 {
+    text-align: center;
+    font-size: 2.6rem;
+    font-weight: 900;
+    color: var(--primary-yellow, #fee14e);
+    margin-bottom: 22px;
+    letter-spacing: 1.5px;
+    text-shadow: 0 2px 0 #fff, 0 4px 16px #e3eaf1;
+    animation: fadeIn 1s;
+}
+
+.login-container form {
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+    align-items: center;
+}
+
+.login-container input[type="text"],
+.login-container input[type="password"] {
+    padding: 22px 18px;
+    border: 2px solid #e0e0e0;
+    border-radius: 12px;
+    font-size: 1.25rem;
+    background: #fafdff;
+    transition: border 0.2s, box-shadow 0.2s, background 0.2s;
+    font-family: var(--font-family, 'Montserrat', sans-serif);
+    outline: none;
+    width: 100%;
+}
+
+.login-container input[type="text"]:focus,
+.login-container input[type="password"]:focus {
+    border: 2px solid var(--primary-yellow, #fee14e);
+    background: #fffde7;
+    box-shadow: 0 0 0 4px #fffbe6;
+}
+
+.login-btn {
+    margin-top: 18px;
+    padding: 18px 0;
+    background: linear-gradient(90deg, var(--primary-yellow, #fee14e) 70%, #ffe29a 100%);
+    color: #222;
+    border: none;
+    border-radius: 12px;
+    font-size: 1.3rem;
+    font-weight: 800;
+    cursor: pointer;
+    transition: 
+        background 0.2s, 
+        box-shadow 0.2s, 
+        transform 0.1s,
+        color 0.2s;
+    box-shadow: 0 4px 16px #fee14e44;
+    letter-spacing: 0.7px;
+    overflow: hidden;
+    position: relative;
+}
+
+.login-btn:hover, .login-btn:focus {
+    background: linear-gradient(90deg, #ffe29a 60%, var(--primary-yellow, #fee14e) 100%);
+    box-shadow: 0 8px 32px #fee14e88;
+    transform: translateY(-2px) scale(1.04);
+    color: #000;
+}
+
+.login-btn:active {
+    transform: scale(0.98);
+}
+
+.error {
+    background: #ffeaea;
+    color: #c00;
+    border-radius: 6px;
+    padding: 10px 16px;
+    margin-bottom: 10px;
+    text-align: center;
+    font-weight: 600;
+    box-shadow: 0 2px 8px #fee14e44;
+    border: 1px solid #fbb;
+}
+
+/* Animación de fadeIn */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px);}
+    to { opacity: 1; transform: translateY(0);}
 }
 
 .property-list {
@@ -670,4 +836,73 @@ body {
     background: #e74c3c;
     color: #fff;
     transform: scale(1.07);
+}
+
+/* Sobre Nosotros */
+.about-container {
+    max-width: 1300px;
+    margin: 40px auto;
+    padding: 32px 24px;
+    background: rgba(255,255,255,0.92);
+    border-radius: 18px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+}
+
+.about-title {
+    text-align: center;
+    font-size: 2.6rem;
+    font-weight: 800;
+    color: var(--primary-yellow, #fee14e);
+    margin-bottom: 32px;
+    letter-spacing: 1.2px;
+    text-shadow: 0 1px 0 #fff, 0 2px 8px #e3eaf1;
+}
+
+.about-row {
+    display: flex;
+    align-items: center;
+    gap: 32px;
+    margin-bottom: 38px;
+}
+
+.about-row.reverse {
+    flex-direction: row-reverse;
+}
+
+.about-img {
+    flex: 0 0 180px;
+    width: 300px;
+    height: 300px;
+    border-radius: 50%;
+    object-fit: cover;
+    box-shadow: 0 4px 16px #fee14e88, 0 2px 8px #0001;
+    border: 4px solid #fffbe6;
+    background: #fff;
+}
+
+.about-text {
+    flex: 1;
+    font-size: 1.18rem;
+    color: #222;
+    line-height: 1.7;
+}
+
+.about-highlight {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #217dbb;
+    margin-top: 18px;
+    letter-spacing: 1px;
+    text-shadow: 0 1px 0 #fff, 0 2px 8px #e3eaf1;
+}
+
+@media (max-width: 900px) {
+    .about-row, .about-row.reverse {
+        flex-direction: column;
+        gap: 18px;
+        text-align: center;
+    }
+    .about-img {
+        margin-bottom: 12px;
+    }
 }

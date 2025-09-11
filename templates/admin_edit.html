@@ -40,6 +40,13 @@
                 <input class="form-input" type="text" name="ubicacion_maps" value="{{ propiedad.ubicacion_maps }}" required placeholder=" " />
                 <label class="form-label" for="ubicacion_maps">Link de Google Maps</label>
             </div>
+            <div class="form-group">
+                <label for="operacion">Operación</label>
+                <select class="form-input" name="operacion" required>
+                    <option value="venta" {% if propiedad.operacion == "venta" %}selected{% endif %}>Venta</option>
+                    <option value="alquiler" {% if propiedad.operacion == "alquiler" %}selected{% endif %}>Alquiler</option>
+                </select>
+            </div>
             <button class="form-btn" type="submit">Guardar Cambios</button>
         </form>
         <div class="image-list">

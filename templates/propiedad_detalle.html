@@ -121,6 +121,20 @@
             height: 100%;
             border: 0;
         }
+
+        .imagenes-propiedad {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+            margin-top: 16px;
+        }
+
+        .imagenes-propiedad img {
+            flex: 1 1 calc(33.333% - 10px);
+            border-radius: 8px;
+            object-fit: cover;
+            height: 200px;
+        }
     </style>
 
     <meta property="og:title" content="{{ propiedad.titulo }} | Pesasi-Migliori">
@@ -133,7 +147,7 @@
 </head>
 <body>
     <header class="header">
-        <h1 class="brand-title">Pesasi-Migliori</h1>
+        <img src="/static/images/logo-pesasi-migliori.png" alt="Pesasi-Migliori" class="brand-logo" >
     </header>
     <div class="page-overlay">
             <div class="page-container">
@@ -144,6 +158,7 @@
             <h1 class="titulo">{{ propiedad.titulo }}</h1>
             <span class="precio">${{ '{:,.0f}'.format(propiedad.precio) }}</span>
             <span class="tipo">({{ propiedad.tipo }})</span>
+            <span class="operacion">({{ propiedad.operacion | capitalize }})</span>
             <div>
                 <a href="https://wa.me/3543642386?text={{ 
     '¡Hola! 👋 Me gustaría recibir más información sobre la propiedad "' ~ propiedad.titulo ~ '".%0A' ~
@@ -195,6 +210,14 @@
                 </div>
             {% endif %}
         </div>
+
+        {% if propiedad.imagenes %}
+            <div class="imagenes-propiedad">
+                {% for img in propiedad.imagenes %}
+                    <img src="{{ img.url }}" alt="Imagen de la propiedad">
+                {% endfor %}
+            </div>
+        {% endif %}
     </div>
     </div>
     </div>

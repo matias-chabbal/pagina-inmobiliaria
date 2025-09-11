@@ -21,22 +21,27 @@ def get_db():
 def public_home(request: Request):
     db: Session = SessionLocal()
     tipo = request.query_params.get("tipo")
+    operacion = request.query_params.get("operacion")
     precio_min = request.query_params.get("precio_min")
     precio_max = request.query_params.get("precio_max")
     ubicacion = request.query_params.get("ubicacion")
 
-    query = db.query(models.Propiedad)
-    if tipo:
-        query = query.filter(models.Propiedad.tipo == tipo)
-    if precio_min:
-        query = query.filter(models.Propiedad.precio >= float(precio_min))
-    if precio_max:
-        query = query.filter(models.Propiedad.precio <= float(precio_max))
-    if ubicacion:
-        query = query.filter(models.Propiedad.ubicacion.ilike(f"%{ubicacion}%"))
-
-    propiedades = query.all()
+    propiedades = crud.listar_propiedades(
+        db,
+        disponibles=True,
+        tipo=tipo,
+        operacion=operacion,
+        precio_min=float(precio_min) if precio_min else None,
+        precio_max=float(precio_max) if precio_max else None,
+        ubicacion=ubicacion
+    )
     return templates.TemplateResponse("public.html", {"request": request, "propiedades": propiedades})
+
+@router.get("/admin", response_class=HTMLResponse)
+def admin_home(request: Request):
+    db: Session = SessionLocal()
+    propiedades = db.query(models.Propiedad).all()
+    return templates.TemplateResponse("admin.html", {"request": request, "propiedades": propiedades})
 
 @router.get("/propiedad/{id}", response_class=HTMLResponse)
 def mostrar_propiedad(request: Request, id: int, db: Session = Depends(get_db)):

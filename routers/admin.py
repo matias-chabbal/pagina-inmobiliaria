@@ -12,6 +12,7 @@ import uuid
 from pathlib import Path
 import shutil
 import models
+from crud import listar_propiedades, crear_imagen, crear_propiedad, crear_imagen
 
 router = APIRouter()
 templates = Jinja2Templates(directory="templates")
@@ -22,6 +23,32 @@ def get_db():
         yield db
     finally:
         db.close()
+
+@router.get("/", response_class=HTMLResponse)
+def public_home(request: Request):
+    db: Session = SessionLocal()
+    tipo = request.query_params.get("tipo")
+    operacion = request.query_params.get("operacion")
+    precio_min = request.query_params.get("precio_min")
+    precio_max = request.query_params.get("precio_max")
+    ubicacion = request.query_params.get("ubicacion")
+
+    propiedades = listar_propiedades(
+        db,
+        disponibles=True,
+        tipo=tipo,
+        operacion=operacion,
+        precio_min=float(precio_min) if precio_min else None,
+        precio_max=float(precio_max) if precio_max else None,
+        ubicacion=ubicacion
+    )
+    return templates.TemplateResponse("public.html", {"request": request, "propiedades": propiedades})
+
+@router.get("/admin", response_class=HTMLResponse)
+def admin_home(request: Request):
+    db: Session = SessionLocal()
+    propiedades = listar_propiedades(db)
+    return templates.TemplateResponse("admin.html", {"request": request, "propiedades": propiedades})
 
 @router.get("/admin", response_class=HTMLResponse)
 def admin_panel(request: Request, db: Session = Depends(get_db)):
@@ -36,66 +63,46 @@ def admin_panel(request: Request, db: Session = Depends(get_db)):
 
 @router.post("/admin/agregar")
 async def agregar_propiedad(
-    request: Request,
     titulo: str = Form(...),
     descripcion: str = Form(...),
     precio: float = Form(...),
     tipo: str = Form(...),
-    imagenes: List[UploadFile] = File(...),
+    disponible: str = Form(...),
     ubicacion: str = Form(...),
     ubicacion_maps: str = Form(...),
-    db: Session = Depends(get_db)
+    operacion: str = Form(...),
+    imagenes: List[UploadFile] = File(None)
 ):
-    try:
-        # Create property
-        propiedad_data = schemas.PropiedadCreate(
-            titulo=titulo,
-            descripcion=descripcion,
-            precio=precio,
-            tipo=tipo,
-            ubicacion=ubicacion,
-            ubicacion_maps=ubicacion_maps,
-            disponible=True
-        )
-        
-        propiedad = crud.crear_propiedad(db, propiedad_data)
-        
-        # Process images
+    db: Session = SessionLocal()
+    nueva_propiedad = schemas.PropiedadCreate(
+        titulo=titulo,
+        descripcion=descripcion,
+        precio=precio,
+        tipo=tipo,
+        disponible=disponible == "on" or disponible == "true",
+        ubicacion=ubicacion,
+        ubicacion_maps=ubicacion_maps,
+        operacion=operacion,
+        imagenes=[]
+    )
+    propiedad = crear_propiedad(db, nueva_propiedad)
+
+    # Guardar imágenes en disco y en la base de datos
+    if imagenes:
         UPLOAD_DIR = Path("static/images")
         UPLOAD_DIR.mkdir(parents=True, exist_ok=True)
-        
         for imagen in imagenes:
-            try:
-                # Get file content
+            if imagen.filename:
                 content = await imagen.read()
-                
-                # Create a simple unique filename with extension
-                ext = ".png" if imagen.content_type == "image/png" else ".jpg"
+                ext = Path(imagen.filename).suffix or ".jpg"
                 unique_filename = f"{uuid.uuid4()}{ext}"
-                
-                # Create filepath
                 filepath = UPLOAD_DIR / unique_filename
-                
-                # Save file using binary write mode
                 with open(filepath, "wb") as f:
                     f.write(content)
-                
-                # Create clean URL
                 imagen_url = f"/static/images/{unique_filename}"
-                crud.crear_imagen(db, imagen_url, propiedad.id)
-                
-                print(f"Imagen guardada: {imagen_url}")
-                
-            except Exception as img_error:
-                print(f"Error guardando imagen: {str(img_error)}")
-                continue
-        
-        return RedirectResponse(url="/admin", status_code=302)
-        
-    except Exception as e:
-        print(f"Error general: {str(e)}")
-        db.rollback()
-        raise
+                crear_imagen(db, imagen_url, propiedad.id)  # <-- Aquí se guarda en la base
+
+    return RedirectResponse("/admin", status_code=303)
 
 @router.get("/login", response_class=HTMLResponse)
 def login_form(request: Request):
@@ -148,6 +155,7 @@ async def edit_propiedad(
     tipo: str = Form(...),
     ubicacion: str = Form(...),
     ubicacion_maps: str = Form(...),
+    operacion: str = Form(...),
     imagenes: list[UploadFile] = File(None)
 ):
     db: Session = SessionLocal()
@@ -159,6 +167,7 @@ async def edit_propiedad(
         propiedad.tipo = tipo
         propiedad.ubicacion = ubicacion
         propiedad.ubicacion_maps = ubicacion_maps
+        propiedad.operacion = operacion
 
         # Guardar nuevas imágenes
         if imagenes:
@@ -173,8 +182,8 @@ async def edit_propiedad(
                     with open(filepath, "wb") as f:
                         f.write(content)
                     imagen_url = f"/static/images/{unique_filename}"
-                    db_imagen = models.ImagenPropiedad(url=imagen_url, propiedad_id=propiedad.id)
-                    db.add(db_imagen)
+                    # Guarda la imagen en la base de datos
+                    crear_imagen(db, imagen_url, propiedad.id)
         db.commit()
     return RedirectResponse("/admin?msg=edicion_exitosa", status_code=303)
 

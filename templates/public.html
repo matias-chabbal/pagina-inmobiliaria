@@ -8,8 +8,9 @@
     
 </head>
 <body>
+
     <header class="header">
-        <h1 class="brand-title">Pesasi-Migliori</h1>
+        <img src="/static/images/logo-pesasi-migliori.png" alt="Pesasi-Migliori" class="brand-logo" >
     </header>
     
     <nav class="nav-container">
@@ -36,6 +37,11 @@
             <option value="Departamento" {% if request.query_params.get('tipo') == "Departamento" %}selected{% endif %}>Departamento</option>
             <option value="Terreno" {% if request.query_params.get('tipo') == "Terreno" %}selected{% endif %}>Terreno</option>
         </select>
+        <select name="operacion" class="filter-input">
+            <option value="">Operación</option>
+            <option value="venta" {% if request.query_params.get('operacion') == "venta" %}selected{% endif %}>Venta</option>
+            <option value="alquiler" {% if request.query_params.get('operacion') == "alquiler" %}selected{% endif %}>Alquiler</option>
+        </select>
         <input type="number" name="precio_min" class="filter-input" placeholder="Precio mínimo" value="{{ request.query_params.get('precio_min', '') }}">
         <input type="number" name="precio_max" class="filter-input" placeholder="Precio máximo" value="{{ request.query_params.get('precio_max', '') }}">
         <input type="text" name="ubicacion" class="filter-input" placeholder="Ubicación" value="{{ request.query_params.get('ubicacion', '') }}">
@@ -58,6 +64,7 @@
                         <div class="propiedad-tipo">{{ p.tipo }}</div>
                         <div class="propiedad-tipo">$ {{ p.precio }}</div>
                         <p class="propiedad-descripcion">{{ p.ubicacion }}</p>
+                        <span class="operacion">({{ p.operacion | capitalize }})</span>
                         <div class="botones-container">
                             <a href="/propiedad/{{ p.id }}" class="btn btn-detalles">Ver Detalles</a>
                             <a href="https://wa.me/3543642386?text=Hola, me interesa la propiedad: {{ p.titulo|urlencode }} ({{ request.base_url }}propiedad/{{ p.id }})" 
@@ -68,6 +75,8 @@
                         </div>
                     </div>
                 </div>
+            {% else %}
+                <p>No hay propiedades para mostrar.</p>
             {% endfor %}
         </div>
     </div>
