@@ -146,6 +146,35 @@
         </form>
     </div>
 </div>
+<div id="whatsappModal" class="whatsapp-modal">
+    <div class="whatsapp-modal-content">
+        <span class="close-modal" id="closeWhatsappModal">&times;</span>
+        <h2 class="section-title">Consulta por WhatsApp</h2>
+        <form id="whatsappForm" class="whatsapp-form" autocomplete="off">
+            <div class="whatsapp-row">
+                <input type="number" min="1" name="habitaciones" class="whatsapp-input" placeholder="Cantidad de habitaciones">
+            </div>
+            <div class="whatsapp-row">
+                <input type="text" name="ubicacion_aprox" class="whatsapp-input" placeholder="Ubicación aproximada">
+            </div>
+            <div class="whatsapp-row">
+                <input type="number" min="1" name="personas" class="whatsapp-input" placeholder="Cantidad de personas">
+            </div>
+            <div class="whatsapp-row">
+                <select name="operacion" class="whatsapp-input">
+                    <option value="">Operación (opcional)</option>
+                    <option value="Venta">Venta</option>
+                    <option value="Alquiler">Alquiler</option>
+                </select>
+            </div>
+            <button type="submit" class="whatsapp-btn">Enviar por WhatsApp</button>
+        </form>
+        <p class="whatsapp-note">Todos los datos son opcionales.</p>
+    </div>
+</div>
+<a href="#" id="whatsappBtn" class="floating-whatsapp whatsapp-float" title="Enviar consulta por WhatsApp">
+    <img src="/static/images/whatsapp-logo.png" alt="WhatsApp" class="whatsapp-logo">
+</a>
     <script src="https://cdn.jsdelivr.net/npm/swiper@8/swiper-bundle.min.js"></script>
     <script>
         function toggleMenu() {
@@ -211,6 +240,38 @@
         const url = `https://wa.me/3543511948?text=${encodeURIComponent(mensaje)}`;
         window.open(url, '_blank');
     };
-</script>
+    document.getElementById('whatsappBtn').onclick = function(e) {
+        e.preventDefault();
+        document.getElementById('whatsappModal').classList.add('show');
+    };
+    document.getElementById('closeWhatsappModal').onclick = function() {
+        document.getElementById('whatsappModal').classList.remove('show');
+    };
+    document.getElementById('whatsappModal').onclick = function(e) {
+        if (e.target === this) this.classList.remove('show');
+    };
+    document.getElementById('whatsappForm').onsubmit = function(e) {
+        e.preventDefault();
+        const habitaciones = this.habitaciones.value.trim();
+        const ubicacion_aprox = this.ubicacion_aprox.value.trim();
+        const personas = this.personas.value.trim();
+        const operacion = this.operacion.value;
+
+        let mensaje = "";
+        if (habitaciones || ubicacion_aprox || personas || operacion) {
+            mensaje = "Consulta por WhatsApp:\nHola me gustaría consultar por las propiedades disponibles con las siguientes características:\n";
+            if (operacion) mensaje += `Operación: ${operacion}\n`;
+            if (habitaciones) mensaje += `Habitaciones: ${habitaciones}\n`;
+            if (ubicacion_aprox) mensaje += `Ubicación aproximada: ${ubicacion_aprox}\n`;
+            if (personas) mensaje += `Cantidad de personas: ${personas}\n`;
+        } else {
+            mensaje = "Hola, me gustaría recibir información sobre las propiedades disponibles";
+        }
+
+        const url = `https://wa.me/3543511948?text=${encodeURIComponent(mensaje)}`;
+        window.open(url, '_blank');
+        document.getElementById('whatsappModal').classList.remove('show');
+    };
+    </script>
 </body>
 </html>

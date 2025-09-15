@@ -135,6 +135,116 @@
             object-fit: cover;
             height: 200px;
         }
+
+        .floating-whatsapp {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: var(--primary-yellow);
+            color: var(--text-dark);
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            z-index: 1000;
+            transition: background-color 0.3s;
+        }
+
+        .floating-whatsapp:hover {
+            background-color: #FFE5B4;
+        }
+
+        .whatsapp-logo {
+            width: 24px;
+            height: 24px;
+        }
+
+        /* Estilos para el modal de WhatsApp */
+        .whatsapp-modal {
+            display: none;
+            position: fixed;
+            z-index: 1001;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgb(0,0,0);
+            background-color: rgba(0,0,0,0.4);
+        }
+
+        .whatsapp-modal-content {
+            background-color: #fefefe;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 500px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        .close-modal {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .close-modal:hover,
+        .close-modal:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .section-title {
+            margin: 0 0 16px 0;
+            font-size: 1.5em;
+            color: #333;
+        }
+
+        .whatsapp-row {
+            margin-bottom: 12px;
+        }
+
+        .whatsapp-input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+
+        .whatsapp-input:focus {
+            border-color: var(--primary-yellow);
+            outline: none;
+        }
+
+        .whatsapp-btn {
+            background: var(--primary-yellow);
+            color: var(--text-dark);
+            padding: 12px 24px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background 0.3s;
+        }
+
+        .whatsapp-btn:hover {
+            background: #FFE5B4;
+        }
+
+        .whatsapp-note {
+            font-size: 14px;
+            color: #666;
+            margin-top: 12px;
+            text-align: center;
+        }
     </style>
 
     <meta property="og:title" content="{{ propiedad.titulo }} | Pesasi-Migliori">
@@ -275,5 +385,36 @@
         }
     </script>
     <script src="https://maps.googleapis.com/maps/api/js?key=TU_API_KEY&callback=initMap" async defer></script>
+
+
+    <!-- Modal de WhatsApp -->
+    <div id="whatsappModal" class="whatsapp-modal">
+        <div class="whatsapp-modal-content">
+            <span class="close-modal" id="closeWhatsappModal">&times;</span>
+            <h2 class="section-title">Consulta por WhatsApp</h2>
+            <form id="whatsappForm" class="whatsapp-form" autocomplete="off">
+                <div class="whatsapp-row">
+                    <input type="number" min="1" name="habitaciones" class="whatsapp-input" placeholder="Cantidad de habitaciones">
+                </div>
+                <div class="whatsapp-row">
+                    <input type="text" name="ubicacion_aprox" class="whatsapp-input" placeholder="Ubicación aproximada">
+                </div>
+                <div class="whatsapp-row">
+                    <input type="number" min="1" name="personas" class="whatsapp-input" placeholder="Cantidad de personas">
+                </div>
+                <div class="whatsapp-row">
+                    <select name="operacion" class="whatsapp-input">
+                        <option value="">Operación (opcional)</option>
+                        <option value="Venta">Venta</option>
+                        <option value="Alquiler">Alquiler</option>
+                    </select>
+                </div>
+                <button type="submit" class="whatsapp-btn">Enviar por WhatsApp</button>
+            </form>
+            <p class="whatsapp-note">Todos los datos son opcionales.</p>
+        </div>
+    </div>
+
+    
 </body>
 </html>
