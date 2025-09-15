@@ -18,6 +18,7 @@
                 <a href="/" class="nav-link">Propiedades</a>
                 <a href="/sobre-nosotros" class="nav-link active">Sobre Nosotros</a>
                 <a href="#" class="nav-link" id="contactBtn">Como Encontrarnos</a>
+                <a href="#" class="nav-link" id="tasacionBtn">Tasación</a>
             </div>
         </div>
     </nav>
@@ -105,6 +106,46 @@
         </p>
     </div>
 </div>
+<div id="tasacionModal" class="tasacion-modal">
+    <div class="tasacion-modal-content">
+        <span class="close-modal" id="closeTasacionModal">&times;</span>
+        <h2 class="section-title">Solicitar Tasación</h2>
+        <form id="tasacionForm" class="tasacion-form" autocomplete="off">
+            <div class="tasacion-row">
+                <input type="text" name="nombre" class="tasacion-input" placeholder="Nombre" required>
+                <input type="text" name="apellido" class="tasacion-input" placeholder="Apellido" required>
+            </div>
+            <div class="tasacion-row">
+                <input type="email" name="mail" class="tasacion-input" placeholder="Email" required>
+            </div>
+            <div class="tasacion-row">
+                <select name="tipo" class="tasacion-input" required>
+                    <option value="">Tipo de propiedad</option>
+                    <option value="Casa">Casa</option>
+                    <option value="Terreno">Terreno</option>
+                    <option value="Departamento">Departamento</option>
+                </select>
+            </div>
+            <div class="tasacion-row">
+                <select name="operacion" class="tasacion-input" required>
+                    <option value="">Operación</option>
+                    <option value="Venta">Venta</option>
+                    <option value="Alquiler">Alquiler</option>
+                </select>
+            </div>
+            <div class="tasacion-row">
+                <textarea name="descripcion" class="tasacion-input" rows="3" maxlength="250" placeholder="Descripción breve"></textarea>
+            </div>
+            <div class="tasacion-row">
+                <input type="text" name="ubicacion" class="tasacion-input" placeholder="Ubicación (obligatorio)" required>
+            </div>
+            <div class="tasacion-row">
+                <input type="text" name="maps" class="tasacion-input" placeholder="Enlace de Google Maps (opcional)">
+            </div>
+            <button type="submit" class="tasacion-btn">Enviar por WhatsApp</button>
+        </form>
+    </div>
+</div>
     <script src="https://cdn.jsdelivr.net/npm/swiper@8/swiper-bundle.min.js"></script>
     <script>
         function toggleMenu() {
@@ -137,6 +178,38 @@
     };
     document.getElementById('contactModal').onclick = function(e) {
         if (e.target === this) this.classList.remove('show');
+    };
+    document.getElementById('tasacionBtn').onclick = function(e) {
+        e.preventDefault();
+        document.getElementById('tasacionModal').classList.add('show');
+    };
+    document.getElementById('closeTasacionModal').onclick = function() {
+        document.getElementById('tasacionModal').classList.remove('show');
+    };
+    document.getElementById('tasacionModal').onclick = function(e) {
+        if (e.target === this) this.classList.remove('show');
+    };
+    document.getElementById('tasacionForm').onsubmit = function(e) {
+        e.preventDefault();
+        const nombre = this.nombre.value.trim();
+        const apellido = this.apellido.value.trim();
+        const mail = this.mail.value.trim();
+        const tipo = this.tipo.value;
+        const descripcion = this.descripcion.value.trim();
+        const ubicacion = this.ubicacion.value.trim();
+        const maps = this.maps.value.trim();
+        const operacion = this.operacion.value;
+
+        let mensaje = `Hola, quiero solicitar una tasación.\n\n`;
+        mensaje += `Nombre: ${nombre}\nApellido: ${apellido}\nEmail: ${mail}\n`;
+        mensaje += `Tipo de propiedad: ${tipo}\n`;
+        mensaje += `Operación: ${operacion}\n`;
+        if (descripcion) mensaje += `Descripción: ${descripcion}\n`;
+        mensaje += `Ubicación: ${ubicacion}\n`;
+        if (maps) mensaje += `Google Maps: ${maps}\n`;
+
+        const url = `https://wa.me/3543511948?text=${encodeURIComponent(mensaje)}`;
+        window.open(url, '_blank');
     };
 </script>
 </body>
