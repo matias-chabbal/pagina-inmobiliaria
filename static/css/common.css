@@ -197,13 +197,24 @@ body {
     margin-right: 100px;
 }
 
+/* Grilla de propiedades adaptativa */
 .propiedades-grid {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(3, 1fr);
     gap: 32px;
-    width: 100%;
-    margin: 0 auto;
-    justify-items: center;
+    margin-top: 32px;
+}
+
+@media (max-width: 1100px) {
+    .propiedades-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 700px) {
+    .propiedades-grid {
+        grid-template-columns: 1fr;
+    }
 }
 
 .propiedad-card {
