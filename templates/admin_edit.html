@@ -25,6 +25,13 @@
                     <option value="Casa" {% if propiedad.tipo == "Casa" %}selected{% endif %}>Casa</option>
                     <option value="Departamento" {% if propiedad.tipo == "Departamento" %}selected{% endif %}>Departamento</option>
                     <option value="Terreno" {% if propiedad.tipo == "Terreno" %}selected{% endif %}>Terreno</option>
+                    <option value="Galpones" {% if propiedad.tipo == "Galpones" %}selected{% endif %}>Galpones</option>
+                    <option value="Oficinas" {% if propiedad.tipo == "Oficinas" %}selected{% endif %}>Oficinas</option>
+                    <option value="Locales" {% if propiedad.tipo == "Locales" %}selected{% endif %}>Locales</option>
+                    <option value="Campos" {% if propiedad.tipo == "Campos" %}selected{% endif %}>Campos</option>
+
+
+
                 </select>
                 <label class="form-label" for="tipo">Tipo de Propiedad</label>
             </div>

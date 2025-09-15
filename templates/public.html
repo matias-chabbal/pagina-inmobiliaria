@@ -38,6 +38,11 @@
             <option value="Casa" {% if request.query_params.get('tipo') == "Casa" %}selected{% endif %}>Casa</option>
             <option value="Departamento" {% if request.query_params.get('tipo') == "Departamento" %}selected{% endif %}>Departamento</option>
             <option value="Terreno" {% if request.query_params.get('tipo') == "Terreno" %}selected{% endif %}>Terreno</option>
+            <option value="Galpones" {% if request.query_params.get('tipo') == "Galpones" %}selected{% endif %}>Galpones</option>
+            <option value="Oficinas" {% if request.query_params.get('tipo') == "Oficinas" %}selected{% endif %}>Oficinas</option>
+            <option value="Locales" {% if request.query_params.get('tipo') == "Locales" %}selected{% endif %}>Locales</option>
+            <option value="Campos" {% if request.query_params.get('tipo') == "Campos" %}selected{% endif %}>Campos</option>
+
         </select>
         <select name="operacion" class="filter-input">
             <option value="">Operación</option>
@@ -140,6 +145,10 @@
                     <option value="Casa">Casa</option>
                     <option value="Terreno">Terreno</option>
                     <option value="Departamento">Departamento</option>
+                    <option value="Galpones">Galpones</option>
+                    <option value="Oficinas">Oficinas</option>
+                    <option value="Locales">Locales</option>
+                    <option value="Campos">Campos</option>
                 </select>
             </div>
             <div class="tasacion-row">

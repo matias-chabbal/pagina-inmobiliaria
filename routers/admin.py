@@ -6,13 +6,16 @@ from database import SessionLocal
 import crud, schemas
 from fastapi.templating import Jinja2Templates
 from starlette.status import HTTP_302_FOUND
-from admin_config import ADMIN_USERNAME, ADMIN_PASSWORD
+
 from utils import clean_filename
 import uuid
 from pathlib import Path
 import shutil
 import models
 from crud import listar_propiedades, crear_imagen, crear_propiedad, crear_imagen
+from crud import verify_password
+from models import Admin
+from datetime import datetime, timedelta
 
 router = APIRouter()
 templates = Jinja2Templates(directory="templates")
@@ -110,9 +113,19 @@ def login_form(request: Request):
 
 @router.post("/login")
 def login(request: Request, response: Response, username: str = Form(...), password: str = Form(...)):
-    if username == ADMIN_USERNAME and password == ADMIN_PASSWORD:
+    db: Session = SessionLocal()
+    admin = autenticar_admin(db, username, password)
+    if admin:
+        expires = datetime.utcnow() + timedelta(minutes=20)
+        response.set_cookie(
+            key="admin_logged",
+            value="true",
+            httponly=True,
+            expires=expires.strftime("%a, %d-%b-%Y %H:%M:%S GMT"),
+            max_age=20*60,  # 20 minutos en segundos
+            samesite="lax"
+        )
         response = RedirectResponse(url="/admin", status_code=HTTP_302_FOUND)
-        response.set_cookie(key="admin_logged", value="true", httponly=True)
         return response
     return templates.TemplateResponse("login.html", {"request": request, "error": "Credenciales incorrectas"})
 
@@ -203,3 +216,9 @@ def delete_image(image_id: int):
         return RedirectResponse(f"/admin/edit/{propiedad_id}", status_code=303)
     # Si no existe, redirige al admin
     return RedirectResponse("/admin", status_code=303)
+
+def autenticar_admin(db, username, password):
+    admin = db.query(Admin).filter_by(username=username).first()
+    if admin and verify_password(password, admin.password_hash):
+        return admin
+    return None

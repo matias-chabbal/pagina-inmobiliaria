@@ -3,6 +3,15 @@ import models
 import schemas
 from typing import List
 from pathlib import Path
+from passlib.context import CryptContext
+
+pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+
+def hash_password(password: str) -> str:
+    return pwd_context.hash(password)
+
+def verify_password(plain_password: str, hashed_password: str) -> bool:
+    return pwd_context.verify(plain_password, hashed_password)
 
 def crear_propiedad(db: Session, propiedad: schemas.PropiedadCreate):
     try:
