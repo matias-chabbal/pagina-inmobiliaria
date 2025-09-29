@@ -47,17 +47,11 @@ def public_home(request: Request):
     )
     return templates.TemplateResponse("public.html", {"request": request, "propiedades": propiedades})
 
-@router.get("/admin", response_class=HTMLResponse)
-def admin_home(request: Request):
-    db: Session = SessionLocal()
-    propiedades = listar_propiedades(db)
-    return templates.TemplateResponse("admin.html", {"request": request, "propiedades": propiedades})
 
 @router.get("/admin", response_class=HTMLResponse)
 def admin_panel(request: Request, db: Session = Depends(get_db)):
     if request.cookies.get("admin_logged") != "true":
         return RedirectResponse(url="/login", status_code=HTTP_302_FOUND)
-    
     propiedades = crud.listar_propiedades(db)
     return templates.TemplateResponse(
         "admin.html", 
@@ -112,11 +106,12 @@ def login_form(request: Request):
     return templates.TemplateResponse("login.html", {"request": request, "error": None})
 
 @router.post("/login")
-def login(request: Request, response: Response, username: str = Form(...), password: str = Form(...)):
+def login(request: Request, username: str = Form(...), password: str = Form(...)):
     db: Session = SessionLocal()
     admin = autenticar_admin(db, username, password)
     if admin:
         expires = datetime.utcnow() + timedelta(minutes=20)
+        response = RedirectResponse(url="/admin", status_code=HTTP_302_FOUND)
         response.set_cookie(
             key="admin_logged",
             value="true",
@@ -125,7 +120,6 @@ def login(request: Request, response: Response, username: str = Form(...), passw
             max_age=20*60,  # 20 minutos en segundos
             samesite="lax"
         )
-        response = RedirectResponse(url="/admin", status_code=HTTP_302_FOUND)
         return response
     return templates.TemplateResponse("login.html", {"request": request, "error": "Credenciales incorrectas"})
 
@@ -135,9 +129,12 @@ def logout(response: Response):
     response.delete_cookie("admin_logged")
     return response
 
+from fastapi import Request, HTTPException
+from fastapi.responses import RedirectResponse
+
 def admin_auth(request: Request):
     if request.cookies.get("admin_logged") != "true":
-        return RedirectResponse(url="/admin/login", status_code=HTTP_302_FOUND)
+        return RedirectResponse(url="/login", status_code=302)
 
 @router.post("/admin/delete/{propiedad_id}")
 async def delete_propiedad(
